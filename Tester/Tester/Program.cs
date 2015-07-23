@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tester
 {
@@ -10,6 +6,9 @@ namespace Tester
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Starting service");
+            Service.Core.Service.Process();
+            Console.WriteLine("Service has completed processing");
         }
     }
 }
