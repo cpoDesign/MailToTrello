@@ -1,6 +1,15 @@
-﻿using Akka.Actor;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Net.Security;
+using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Text.RegularExpressions;
+using Akka.Actor;
 using System;
 using System.Threading;
+using OpenPop.Mime;
+using OpenPop.Pop3;
 
 namespace Service.Core
 {
@@ -27,13 +36,13 @@ namespace Service.Core
 
             var actorSystem = ActorSystem.Create("myActorSystem");
 
-            var yellowActor = actorSystem.ActorOf<YellowActor>();
+            var yellowActor = actorSystem.ActorOf<EmailReaderActor>();
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Starting actor system on thread: {0}", Thread.CurrentThread.ManagedThreadId);
 
             yellowActor.Tell("Message to yellow");
             actorSystem.AwaitTermination();
-        
+
         }
     }
 
@@ -131,11 +140,10 @@ namespace Service.Core
         }
     }
 
-    public class YellowActor : UntypedActor
+    public class EmailReaderActor : UntypedActor
     {
-        private const string ActorName = "YellowActor";
+        private const string ActorName = "EmailReaderActor";
         private const ConsoleColor MessageColor = ConsoleColor.Yellow;
-
         private IActorRef _greenActor;
 
         protected override void PreStart()
@@ -144,7 +152,7 @@ namespace Service.Core
 
             _greenActor = Context.ActorOf<GreenActor>();
         }
-        
+
         protected override void OnReceive(object message)
         {
             if (message is string)
@@ -152,7 +160,6 @@ namespace Service.Core
                 var msg = message as string;
 
                 PrintMessage(msg);
-                _greenActor.Tell(msg);
             }
         }
 
@@ -164,6 +171,34 @@ namespace Service.Core
                 ActorName,
                 Thread.CurrentThread.ManagedThreadId,
                 message);
+            ReadAllImages();
+        }
+
+        private void ReadAllImages()
+        {
+
+            // The client disconnects from the server when being disposed
+            using (Pop3Client client = new Pop3Client())
+            {
+                // Connect to the server
+                client.Connect("pop.gmail.com", 995, true);
+
+                // Authenticate ourselves towards the server
+                client.Authenticate("email@gmail.com", "password");
+
+                // Get the number of messages in the inbox
+                int messageCount = client.GetMessageCount();
+
+                // Most servers give the latest message the highest number
+                for (int i = messageCount; i > 0; i--)
+                {
+                    var msg = client.GetMessage(i);
+                    _greenActor.Tell(msg.Headers.Subject);
+                }
+
+                // Now return the fetched messages
+            }
+
         }
     }
 
