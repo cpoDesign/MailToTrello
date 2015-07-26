@@ -1,12 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Akka.Actor;
+using System;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using Email.Entities;
+using Email.Logger;
+using OpenPop.Pop3;
 
 namespace Email.Reader
 {
-    public class Class1
+    public class EmailReaderActor : UntypedActor
     {
+        private const string ActorName = "EmailReaderActor";
+        private const ConsoleColor MessageColor = ConsoleColor.Yellow;
+        private IActorRef _greenActor;
+        private const string Email = "email@domain.com";
+        private const string EmailPwd = "password";
+        private const string Pop3 = "mail.domain.com";
+        private const int PopPort = 995;
+
+        protected override void PreStart()
+        {
+            base.PreStart();
+
+            _greenActor = Context.ActorOf<GreenActor>();
+        }
+
+        protected override void OnReceive(object message)
+        {
+            if (message is string)
+            {
+                var msg = message as string;
+
+                PrintMessage(msg);
+            }
+        }
+
+        private void PrintMessage(string message)
+        {
+            Console.ForegroundColor = MessageColor;
+            Console.WriteLine(
+                "{0} on thread #{1}: {2}",
+                ActorName,
+                Thread.CurrentThread.ManagedThreadId,
+                message);
+            ReadAllImages();
+        }
+
+        private void ReadAllImages()
+        {
+
+            // The client disconnects from the server when being disposed
+            using (Pop3Client client = new Pop3Client())
+            {
+                // Connect to the server
+                client.Connect(Pop3, PopPort, true, 1800, 1800, removeCertificateCallback);
+
+                // Authenticate ourselves towards the server
+                client.Authenticate(Email, EmailPwd);
+
+                // Get the number of messages in the inbox
+                int messageCount = client.GetMessageCount();
+
+                // Most servers give the latest message the highest number
+                for (int i = messageCount; i > 0; i--)
+                {
+                    var msg = client.GetMessage(i);
+                    _greenActor.Tell(new EmailMessage(){Subject = msg.Headers.Subject});
+                }
+
+                // Now return the fetched messages
+            }
+        }
+
+        private bool removeCertificateCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
+        {
+            return true;
+        }
     }
 }
