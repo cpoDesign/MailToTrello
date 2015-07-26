@@ -51,7 +51,6 @@
     <Reference Include="System.Security" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EmailReaderActor.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -59,6 +58,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Email.Entities\Email.Entities.csproj">
+      <Project>{FACE9B0A-DC12-4752-9884-A9760FBC6BA8}</Project>
+      <Name>Email.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Email.Logger\Email.Logger.csproj">
+      <Project>{7A68DC91-06DA-4AAA-B35F-01443E724C10}</Project>
+      <Name>Email.Logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Email.Reader\Email.Reader.csproj">
       <Project>{8A3E18FF-41FC-4C13-9269-AEA32DB84801}</Project>
       <Name>Email.Reader</Name>

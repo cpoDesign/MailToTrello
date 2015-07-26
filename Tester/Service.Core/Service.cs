@@ -1,7 +1,7 @@
-﻿using Akka.Actor;
-using Email.Reader;
-using System;
-using System.Threading;
+﻿using System;
+using Akka.Actor;
+using Email.Entities;
+using Email.Logger;
 
 namespace Service.Core
 {
@@ -9,63 +9,42 @@ namespace Service.Core
     {
         public static void Process()
         {
-            //Console.WriteLine("Starting processing");
-            //// Create a new actor system (a container for your actors)
-            //var system = ActorSystem.Create("MySystem");
+            Console.WriteLine("Starting processing");
+            // Create a new actor system (a container for your actors)
+            var system = ActorSystem.Create("MySystem");
 
-            //// Create your actor and get a reference to it.
-            //// This will be an "ActorRef", which is not a
-            //// reference to the actual actor instance
-            //// but rather a client or proxy to it.
-            //var emailProcessor = system.ActorOf<EmailReaderActor>("EmailReaderActor");
+            // Create your actor and get a reference to it.
+            // This will be an "ActorRef", which is not a
+            // reference to the actual actor instance
+            // but rather a client or proxy to it.
+            var greeter = system.ActorOf<EmailReaderActor.EmailProcessingActor>("EmailProcessingActor");
 
-            //// Send a message to the actor
-            //emailProcessor.Tell(new Email("Hello thread"));
+            // Send a message to the actor
+            greeter.Tell(new EmailMessage() { Subject = "Start processing" });
 
-            //system.AwaitTermination();
-
-            //Console.WriteLine("Completed processing");
-
-            var actorSystem = ActorSystem.Create("myActorSystem");
-
-            var yellowActor = actorSystem.ActorOf<EmailReaderActor>();
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Starting actor system on thread: {0}", Thread.CurrentThread.ManagedThreadId);
-
-            yellowActor.Tell("Message to yellow");
-            actorSystem.AwaitTermination();
-
-        }
-    }
-    
-    public class BlueActor : ReceiveActor
-    {
-        private const string ActorName = "BlueActor";
-        private const ConsoleColor MessageColor = ConsoleColor.Blue;
-
-        protected override void PreStart()
-        {
-            base.PreStart();
-            Become(HandleString);
+            Console.WriteLine("Completed processing");
         }
 
-        private void HandleString()
+        public class EmailReaderActor : UntypedActor
         {
-            Receive<string>(s =>
+            private const string ActorName = "EmailReaderActor";
+            private const ConsoleColor MessageColor = ConsoleColor.Yellow;
+            private IActorRef _greenActor;
+            public class EmailProcessingActor : ReceiveActor
             {
-                PrintMessage(s);
-                //Sender.Tell(new EmailMessage(_counter));
-            });
-        }
+                public EmailProcessingActor()
+                {
+                    Receive<EmailMessage>(greet =>
+                        Console.WriteLine("Hello {0}", greet.Subject));
+                }
+            }
 
-        private void PrintMessage(string message)
-        {
-            Console.ForegroundColor = MessageColor;
-            Console.WriteLine(
-                "{0} on thread #{1}: {2}",
-                ActorName,
-                Thread.CurrentThread.ManagedThreadId,
-                message);
+            protected override void OnReceive(object message)
+            {
+                base.PreStart();
+
+                _greenActor = Context.ActorOf<GreenActor>();
+            }
         }
     }
 }
