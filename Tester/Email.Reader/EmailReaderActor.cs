@@ -15,10 +15,6 @@ namespace Email.Reader
         private const string ActorName = "EmailReaderActor";
         private const ConsoleColor MessageColor = ConsoleColor.Yellow;
         private IActorRef _greenActor;
-        private const string Email = "email@domain.com";
-        private const string EmailPwd = "password";
-        private const string Pop3 = "mail.domain.com";
-        private const int PopPort = 995;
 
         protected override void PreStart()
         {
@@ -55,10 +51,10 @@ namespace Email.Reader
             using (Pop3Client client = new Pop3Client())
             {
                 // Connect to the server
-                client.Connect(Pop3, PopPort, true, 1800, 1800, removeCertificateCallback);
+                client.Connect(EmailConfiguration.Pop3, EmailConfiguration.PopPort, true, 1800, 1800, removeCertificateCallback);
 
                 // Authenticate ourselves towards the server
-                client.Authenticate(Email, EmailPwd);
+                client.Authenticate(EmailConfiguration.Email, EmailConfiguration.EmailPwd);
 
                 // Get the number of messages in the inbox
                 int messageCount = client.GetMessageCount();
