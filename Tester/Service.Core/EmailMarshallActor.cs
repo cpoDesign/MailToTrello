@@ -1,7 +1,7 @@
 ﻿using System;
 using Akka.Actor;
-using Email.Entities;
 using Email.Logger;
+using Email.Reader;
 
 namespace Service.Core
 {
@@ -16,9 +16,6 @@ namespace Service.Core
             {
                 Console.ForegroundColor = MessageColor;
                 Console.WriteLine("Starting {0}", ActorName);
-                    
-                //Receive<EmailMessage>(greet =>
-                //    Console.WriteLine("Hello {0}", greet.Subject));
             }
         }
 
@@ -28,7 +25,7 @@ namespace Service.Core
             
             Console.WriteLine("PreStart {0}", ActorName);
             
-            _emailProcessorActor = Context.ActorOf<EmailProcessorActor>();
+            _emailProcessorActor = Context.ActorOf<EmailReaderActor>();
         }
 
         protected override void OnReceive(object message)
@@ -50,7 +47,8 @@ namespace Service.Core
             {
                 case "Start processing":
                 {
-                    
+                    Console.WriteLine("Recieved command for start processing {0}", command);
+                    _emailProcessorActor.Tell("Read emails");
                     break;
                 }
                 default:

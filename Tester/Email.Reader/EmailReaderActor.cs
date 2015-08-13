@@ -1,4 +1,5 @@
 ﻿
+using Akka;
 using Akka.Actor;
 using System;
 using System.Net.Security;
@@ -29,7 +30,7 @@ namespace Email.Reader
             {
                 var msg = message as string;
 
-                PrintMessage(msg);
+                ProcessEmailInstruction(msg);
             }
             else
             {
@@ -37,7 +38,7 @@ namespace Email.Reader
             }
         }
 
-        private void PrintMessage(string message)
+        private void ProcessEmailInstruction(string message)
         {
             Console.ForegroundColor = MessageColor;
             Console.WriteLine(
@@ -45,10 +46,13 @@ namespace Email.Reader
                 ActorName,
                 Thread.CurrentThread.ManagedThreadId,
                 message);
-            ReadAllImages();
+            
+            // add check for command
+            
+            ReadAllEmails();
         }
 
-        private void ReadAllImages()
+        private void ReadAllEmails()
         {
 
             // The client disconnects from the server when being disposed
