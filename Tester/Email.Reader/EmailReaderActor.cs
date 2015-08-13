@@ -14,13 +14,13 @@ namespace Email.Reader
     {
         private const string ActorName = "EmailReaderActor";
         private const ConsoleColor MessageColor = ConsoleColor.Yellow;
-        private IActorRef _greenActor;
+        private IActorRef _emailProcessorActor;
 
         protected override void PreStart()
         {
             base.PreStart();
 
-            _greenActor = Context.ActorOf<GreenActor>();
+            _emailProcessorActor = Context.ActorOf<EmailProcessorActor>();
         }
 
         protected override void OnReceive(object message)
@@ -30,6 +30,10 @@ namespace Email.Reader
                 var msg = message as string;
 
                 PrintMessage(msg);
+            }
+            else
+            {
+                Unhandled(message);
             }
         }
 
@@ -63,10 +67,10 @@ namespace Email.Reader
                 for (int i = messageCount; i > 0; i--)
                 {
                     var msg = client.GetMessage(i);
-                    _greenActor.Tell(new EmailMessage(){Subject = msg.Headers.Subject});
+                    
+                    // Now return the fetched messages
+                    _emailProcessorActor.Tell(new EmailMessage(){Subject = msg.Headers.Subject, Date = msg.Headers.Date});
                 }
-
-                // Now return the fetched messages
             }
         }
 

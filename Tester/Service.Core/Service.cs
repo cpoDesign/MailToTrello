@@ -14,12 +14,11 @@ namespace Service.Core
             var system = ActorSystem.Create("MySystem");
 
             // Create your actor and get a reference to it.
-            // This will be an "ActorRef", which is not a
-            // reference to the actual actor instance
+            // This will be an "ActorRef", which is not a reference to the actual actor instance
             // but rather a client or proxy to it.
             var greeter = system.ActorOf<EmailReaderActor.EmailProcessingActor>("EmailProcessingActor");
 
-            // Send a message to the actor
+            // Send a message to the actor to start the process
             greeter.Tell(new EmailMessage() { Subject = "Start processing" });
 
             Console.WriteLine("Completed processing");
@@ -27,13 +26,14 @@ namespace Service.Core
 
         public class EmailReaderActor : UntypedActor
         {
-            private const string ActorName = "EmailReaderActor";
+            //private const string ActorName = "EmailReaderActor";
             private const ConsoleColor MessageColor = ConsoleColor.Yellow;
-            private IActorRef _greenActor;
+            private IActorRef _emailProcessorActor;
             public class EmailProcessingActor : ReceiveActor
             {
                 public EmailProcessingActor()
                 {
+                    Console.ForegroundColor = MessageColor;
                     Receive<EmailMessage>(greet =>
                         Console.WriteLine("Hello {0}", greet.Subject));
                 }
@@ -43,7 +43,7 @@ namespace Service.Core
             {
                 base.PreStart();
 
-                _greenActor = Context.ActorOf<GreenActor>();
+                _emailProcessorActor = Context.ActorOf<EmailProcessorActor>();
             }
         }
     }

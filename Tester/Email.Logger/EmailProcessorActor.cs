@@ -5,9 +5,9 @@ using System.Threading;
 
 namespace Email.Logger
 {
-    public class GreenActor : ReceiveActor
+    public class EmailProcessorActor : ReceiveActor
     {
-        private const string ActorName = "GreenActor";
+        private const string ActorName = "EmailProcessorActor";
         private const ConsoleColor MessageColor = ConsoleColor.Green;
         private const ConsoleColor ResponseColor = ConsoleColor.DarkGreen;
 
