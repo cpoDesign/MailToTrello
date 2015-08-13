@@ -1,7 +1,5 @@
 ﻿using System;
 using Akka.Actor;
-using Email.Entities;
-using Email.Logger;
 
 namespace Service.Core
 {
@@ -16,35 +14,15 @@ namespace Service.Core
             // Create your actor and get a reference to it.
             // This will be an "ActorRef", which is not a reference to the actual actor instance
             // but rather a client or proxy to it.
-            var greeter = system.ActorOf<EmailReaderActor.EmailProcessingActor>("EmailProcessingActor");
+            var greeter = system.ActorOf<EmailMarshallActor.EmailProcessingActor>("EmailMarshallActor");
 
             // Send a message to the actor to start the process
-            greeter.Tell(new EmailMessage() { Subject = "Start processing" });
+            greeter.Tell("Start processing");
+            greeter.Tell("Stop processing");
 
             Console.WriteLine("Completed processing");
         }
 
-        public class EmailReaderActor : UntypedActor
-        {
-            //private const string ActorName = "EmailReaderActor";
-            private const ConsoleColor MessageColor = ConsoleColor.Yellow;
-            private IActorRef _emailProcessorActor;
-            public class EmailProcessingActor : ReceiveActor
-            {
-                public EmailProcessingActor()
-                {
-                    Console.ForegroundColor = MessageColor;
-                    Receive<EmailMessage>(greet =>
-                        Console.WriteLine("Hello {0}", greet.Subject));
-                }
-            }
-
-            protected override void OnReceive(object message)
-            {
-                base.PreStart();
-
-                _emailProcessorActor = Context.ActorOf<EmailProcessorActor>();
-            }
-        }
+    
     }
 }
