@@ -1,6 +1,5 @@
 ﻿using System;
 using Akka.Actor;
-using Email.Logger;
 using Email.Reader;
 
 namespace Service.Core

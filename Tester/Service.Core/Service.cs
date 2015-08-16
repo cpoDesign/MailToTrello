@@ -14,7 +14,7 @@ namespace Service.Core
             // Create your actor and get a reference to it.
             // This will be an "ActorRef", which is not a reference to the actual actor instance
             // but rather a client or proxy to it.
-            var greeter = system.ActorOf<EmailMarshallActor.EmailProcessingActor>("EmailMarshallActor");
+            var greeter = system.ActorOf<EmailMarshallActor>("EmailMarshallActor");
 
             // Send a message to the actor to start the process
             greeter.Tell("Start processing");
