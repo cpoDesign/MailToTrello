@@ -19,6 +19,7 @@ namespace Email.Logger
 
         private void HandleString()
         {
+            
             Receive<EmailMessage>(s => PrintResponse(s));
         }
 

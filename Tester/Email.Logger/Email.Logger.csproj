@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="EmailProcessorActor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

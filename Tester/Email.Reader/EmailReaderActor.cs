@@ -16,12 +16,14 @@ namespace Email.Reader
         private const string ActorName = "EmailReaderActor";
         private const ConsoleColor MessageColor = ConsoleColor.Yellow;
         private IActorRef _emailProcessorActor;
+        private IActorRef _systemLogger;
 
         protected override void PreStart()
         {
             base.PreStart();
 
             _emailProcessorActor = Context.ActorOf<EmailProcessorActor>();
+            _systemLogger = Context.ActorOf<SystemLogger>();
         }
 
         protected override void OnReceive(object message)
@@ -66,7 +68,9 @@ namespace Email.Reader
 
                 // Get the number of messages in the inbox
                 int messageCount = client.GetMessageCount();
-
+                
+                _systemLogger.Tell(string.Format("Total messages found: {0}", messageCount));
+       
                 // Most servers give the latest message the highest number
                 for (int i = messageCount; i > 0; i--)
                 {
