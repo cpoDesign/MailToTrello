@@ -35,6 +35,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Pop3, Version=2.1.4.2, Culture=neutral, PublicKeyToken=e33d940baacd0f37, processorArchitecture=MSIL">
+      <HintPath>..\packages\Pop3.2.1.4.2\lib\net40\Pop3.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
