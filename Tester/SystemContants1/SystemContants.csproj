@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="Class1.d.ts">
+      <DependentUpon>SystemActors.cs</DependentUpon>
+    </None>
+  </ItemGroup>
+
+</Project>

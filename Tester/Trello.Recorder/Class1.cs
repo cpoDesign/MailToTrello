@@ -1,15 +1,14 @@
 ﻿using Akka.Actor;
 using Email.Entities;
 using System;
-using System.Threading;
 using SystemContants;
 
-namespace Email.Logger
+namespace Trello.Recorder
 {
     public class EmailProcessorActor : ReceiveActor
     {
-        private const ConsoleColor MessageColor = ConsoleColor.Green;
-        private const ConsoleColor ResponseColor = ConsoleColor.DarkGreen;
+        private const ConsoleColor MessageColor = ConsoleColor.Cyan;
+        private const ConsoleColor ResponseColor = ConsoleColor.DarkCyan;
 
         protected override void PreStart()
         {
@@ -19,18 +18,15 @@ namespace Email.Logger
 
         private void HandleString()
         {
-            
+
             Receive<EmailMessage>(s => PrintResponse(s));
         }
 
         private void PrintResponse(EmailMessage message)
         {
             Console.ForegroundColor = ResponseColor;
-            Console.Write("{0} on thread #{1}: ",
-                SystemActors.EmailProcessorActor,
-                Thread.CurrentThread.ManagedThreadId);
-            Console.WriteLine("Receive message with counter: {0}",
-                message.Subject);
+            Console.Write("{0} on thread #: ", SystemActors.TrelloActor);
+            Console.WriteLine("Receive message with counter: {0}", message.Subject);
         }
     }
 }

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Service.Core</RootNamespace>
     <AssemblyName>Service.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -71,6 +71,14 @@
     <ProjectReference Include="..\Email.Reader\Email.Reader.csproj">
       <Project>{8A3E18FF-41FC-4C13-9269-AEA32DB84801}</Project>
       <Name>Email.Reader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceConstants\ServiceConstants.csproj">
+      <Project>{902B645F-9B36-49B6-B87D-0B73B848CD88}</Project>
+      <Name>ServiceConstants</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Trello.Recorder\Trello.Recorder.csproj">
+      <Project>{645d6e70-41f2-4aef-8f8a-d30e32390973}</Project>
+      <Name>Trello.Recorder</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

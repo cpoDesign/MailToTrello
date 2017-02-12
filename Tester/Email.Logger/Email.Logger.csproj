@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Email.Logger</RootNamespace>
     <AssemblyName>Email.Logger</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,6 +58,10 @@
     <ProjectReference Include="..\Email.Entities\Email.Entities.csproj">
       <Project>{FACE9B0A-DC12-4752-9884-A9760FBC6BA8}</Project>
       <Name>Email.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceConstants\ServiceConstants.csproj">
+      <Project>{902B645F-9B36-49B6-B87D-0B73B848CD88}</Project>
+      <Name>ServiceConstants</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

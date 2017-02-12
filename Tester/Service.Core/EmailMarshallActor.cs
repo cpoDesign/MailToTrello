@@ -1,12 +1,13 @@
 ﻿using System;
 using Akka.Actor;
 using Email.Reader;
+using SystemContants;
 
 namespace Service.Core
 {
     public class EmailMarshallActor : UntypedActor
     {
-        private const string ActorName = "EmailMarshallActor";
+   
         private const ConsoleColor MessageColor = ConsoleColor.Yellow;
         private IActorRef _emailProcessorActor;
         public class EmailProcessingActor : ReceiveActor
@@ -14,7 +15,7 @@ namespace Service.Core
             public EmailProcessingActor()
             {
                 Console.ForegroundColor = MessageColor;
-                Console.WriteLine("Starting {0}", ActorName);
+                Console.WriteLine("Starting {0}", SystemActors.EmailMarshallActor);
             }
         }
 
@@ -22,14 +23,14 @@ namespace Service.Core
         {
             base.PreStart();
             
-            Console.WriteLine("PreStart {0}", ActorName);
+            Console.WriteLine("PreStart {0}", SystemActors.EmailMarshallActor);
             
             _emailProcessorActor = Context.ActorOf<EmailReaderActor>();
         }
 
         protected override void OnReceive(object message)
         {
-            Console.WriteLine("PreStart {0}", ActorName);
+            Console.WriteLine("PreStart {0}", SystemActors.EmailMarshallActor);
             if (message is string)
             {
                 ProcessMessage(message as string);
